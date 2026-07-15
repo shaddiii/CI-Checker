@@ -100,6 +100,6 @@ Now produce the JSON CI profile as instructed."""
     data = llm_client.call_json(
         system=SYSTEM_PROMPT,
         user_content=[llm_client.text_content_block(user_text)],
-        max_tokens=3000,
+        max_tokens=9000,
     )
     return CIProfile.model_validate(data)
