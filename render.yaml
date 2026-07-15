@@ -10,7 +10,7 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: starter # paid tier: always-on + persistent disk (see README for the free-tier variant)
+    plan: free
     healthCheckPath: /api/health
     envVars:
       - key: ANTHROPIC_API_KEY
@@ -23,7 +23,4 @@ services:
         value: "20000"
       - key: MAX_UPLOAD_MB
         value: "25"
-    disk:
-      name: ci-check-data
-      mountPath: /app/backend/data
-      sizeGB: 1
+
