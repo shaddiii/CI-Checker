@@ -359,7 +359,7 @@ def analyze_url(url: str, profile: CIProfile) -> AnalysisResult:
                     f"CI VOICE/CTA RULES JSON:\n{voice_payload}\n\n{text_for_llm}"
                 )
             ],
-            max_tokens=1500,
+            max_tokens=3000,
         )
         for issue in result.get("issues", []):
             issues.append(Issue(**issue))
