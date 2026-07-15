@@ -1,0 +1,29 @@
+# Render Blueprint - lets Render build and deploy this app straight from a
+# GitHub repo, entirely through the browser (no local install needed).
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Push this whole project to a GitHub repo, then on render.com:
+# New + -> Blueprint -> pick the repo -> Render finds this file automatically.
+services:
+  - type: web
+    name: ci-check
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter # paid tier: always-on + persistent disk (see README for the free-tier variant)
+    healthCheckPath: /api/health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false # you'll be prompted to paste this in Render's dashboard
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-5
+      - key: URL_SCREENSHOT_ENABLED
+        value: "true"
+      - key: SCREENSHOT_TIMEOUT_MS
+        value: "20000"
+      - key: MAX_UPLOAD_MB
+        value: "25"
+    disk:
+      name: ci-check-data
+      mountPath: /app/backend/data
+      sizeGB: 1
