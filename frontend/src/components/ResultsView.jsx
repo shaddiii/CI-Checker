@@ -13,8 +13,8 @@ export default function ResultsView({ results, onNewCheck }) {
 
   return (
     <div className="max-w-3xl">
-      <p className="eyebrow">Schritt 4</p>
-      <h1 className="font-display text-3xl md:text-4xl text-ink mb-6">Befund</h1>
+      <p className="eyebrow">Step 4</p>
+      <h1 className="font-display text-3xl md:text-4xl text-ink mb-6">Verdict</h1>
 
       <div className="bg-white border border-rule rounded-sm p-6 mb-8 flex items-center gap-6">
         <div
@@ -29,10 +29,10 @@ export default function ResultsView({ results, onNewCheck }) {
         </div>
         <div>
           <p className="font-display text-xl text-ink mb-1">
-            {results.length} Asset(s) geprüft
+            {results.length} asset(s) checked
           </p>
           <p className="font-mono text-sm text-ink/60">
-            {counts.green} perfekt · {counts.yellow} mit Issues · {counts.red} mit Abweichungen
+            {counts.green} perfect · {counts.yellow} with issues · {counts.red} with deviations
           </p>
         </div>
       </div>
@@ -44,7 +44,7 @@ export default function ResultsView({ results, onNewCheck }) {
       </div>
 
       <button onClick={onNewCheck} className="btn-secondary mt-8">
-        Weitere Assets prüfen
+        Check more assets
       </button>
     </div>
   );

@@ -33,6 +33,10 @@ and what is stated in the profile. Do not invent violations, and do not
 comment on categories the profile gives no information about. If everything
 checked looks compliant, return an empty issues list.
 
+LANGUAGE: Write "message", "expected", "found" and "summary" in English,
+regardless of what language any visible text in the image or the CI profile
+is written in.
+
 Output ONLY valid JSON (no markdown fences, no commentary):
 {"issues": [{"category": "logo|color|typography|imagery|cta|layout",
 "severity": "critical|minor", "message": string, "expected": string|null,
@@ -55,6 +59,11 @@ and CTA rules as JSON, and a piece of marketing copy. Check the copy for:
 
 Only flag issues that are actually supported by the profile - if the profile
 has no voice/CTA rules, say so in the summary rather than inventing rules.
+
+LANGUAGE: Write "message", "expected", "found" and "summary" in English,
+regardless of what language the checked copy or the CI profile is written
+in. (The copy being checked may itself be in any language - that's fine,
+judge it in its own language, just report your findings in English.)
 
 Output ONLY valid JSON (no markdown fences, no commentary):
 {"issues": [{"category": "voice|cta", "severity": "critical|minor",
@@ -135,7 +144,7 @@ def _vision_check(image_bytes: bytes, media_type: str, profile: CIProfile) -> tu
                 ),
                 llm_client.image_content_block(image_bytes, media_type),
             ],
-            max_tokens=2000,
+            max_tokens=3000,
         )
         for issue in result.get("issues", []):
             issues.append(Issue(**issue))
@@ -204,7 +213,7 @@ def analyze_text(text: str, profile: CIProfile, asset_name: str) -> AnalysisResu
                     f"TEXT TO CHECK:\n---\n{text}\n---"
                 )
             ],
-            max_tokens=1500,
+            max_tokens=2000,
         )
         for issue in result.get("issues", []):
             issues.append(Issue(**issue))
@@ -359,7 +368,7 @@ def analyze_url(url: str, profile: CIProfile) -> AnalysisResult:
                     f"CI VOICE/CTA RULES JSON:\n{voice_payload}\n\n{text_for_llm}"
                 )
             ],
-            max_tokens=3000,
+            max_tokens=2000,
         )
         for issue in result.get("issues", []):
             issues.append(Issue(**issue))

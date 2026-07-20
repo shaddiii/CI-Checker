@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { analyzeImage, analyzeText, analyzeUrl } from "../api.js";
 
 const TABS = [
-  { id: "image", label: "Bild" },
+  { id: "image", label: "Image" },
   { id: "text", label: "Text" },
   { id: "url", label: "URL" },
 ];
@@ -36,7 +36,7 @@ export default function AssetChecker({ onResults }) {
     if (!textDraft.trim()) return;
     addToQueue({
       type: "text",
-      name: textNameDraft.trim() || "Textbaustein",
+      name: textNameDraft.trim() || "Text snippet",
       text: textDraft,
     });
     setTextDraft("");
@@ -73,11 +73,11 @@ export default function AssetChecker({ onResults }) {
 
   return (
     <div className="max-w-2xl">
-      <p className="eyebrow">Schritt 3</p>
-      <h1 className="font-display text-3xl md:text-4xl text-ink mb-2">Assets prüfen</h1>
+      <p className="eyebrow">Step 3</p>
+      <h1 className="font-display text-3xl md:text-4xl text-ink mb-2">Check assets</h1>
       <p className="text-ink/70 mb-6 leading-relaxed">
-        Füge Social-Media-Anzeigen, Texte oder Webseiten-URLs hinzu und starte
-        den Abgleich mit dem gespeicherten CI-Profil.
+        Add social media graphics, copy, or web page URLs and run them against
+        the saved CI profile.
       </p>
 
       <div className="flex gap-1 mb-4 border-b border-rule">
@@ -107,8 +107,8 @@ export default function AssetChecker({ onResults }) {
             className="hidden"
             onChange={(e) => handleFiles(e.target.files)}
           />
-          <p className="font-display text-ink mb-1">Bild(er) auswählen</p>
-          <p className="text-ink/50 text-sm">PNG, JPG, WebP — z. B. Social-Media-Anzeigen</p>
+          <p className="font-display text-ink mb-1">Choose image(s)</p>
+          <p className="text-ink/50 text-sm">PNG, JPG, WebP — e.g. social media ads</p>
         </div>
       )}
 
@@ -116,18 +116,18 @@ export default function AssetChecker({ onResults }) {
         <div className="flex flex-col gap-2">
           <input
             className="input w-full"
-            placeholder="Bezeichnung (optional, z. B. Instagram Caption)"
+            placeholder="Label (optional, e.g. Instagram caption)"
             value={textNameDraft}
             onChange={(e) => setTextNameDraft(e.target.value)}
           />
           <textarea
             className="input w-full min-h-[140px]"
-            placeholder="Text einfügen…"
+            placeholder="Paste text…"
             value={textDraft}
             onChange={(e) => setTextDraft(e.target.value)}
           />
           <button onClick={handleAddText} className="btn-secondary self-start">
-            Zur Warteschlange hinzufügen
+            Add to queue
           </button>
         </div>
       )}
@@ -136,20 +136,20 @@ export default function AssetChecker({ onResults }) {
         <div className="flex gap-2">
           <input
             className="input flex-1"
-            placeholder="https://beispiel.de/seite"
+            placeholder="https://example.com/page"
             value={urlDraft}
             onChange={(e) => setUrlDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAddUrl()}
           />
           <button onClick={handleAddUrl} className="btn-secondary">
-            Hinzufügen
+            Add
           </button>
         </div>
       )}
 
       {queue.length > 0 && (
         <div className="mt-8">
-          <p className="field-label">Warteschlange ({queue.length})</p>
+          <p className="field-label">Queue ({queue.length})</p>
           <ul className="flex flex-col gap-1.5">
             {queue.map((item) => (
               <li
@@ -166,17 +166,17 @@ export default function AssetChecker({ onResults }) {
                   {item.status === "running" && (
                     <span className="w-3.5 h-3.5 border-2 border-ink/20 border-t-indigo rounded-full animate-spin" />
                   )}
-                  {item.status === "done" && <span className="text-verdict-green text-xs">geprüft</span>}
+                  {item.status === "done" && <span className="text-verdict-green text-xs">checked</span>}
                   {item.status === "error" && (
                     <span className="text-verdict-red text-xs" title={item.error}>
-                      Fehler
+                      error
                     </span>
                   )}
                   {item.status === "pending" && (
                     <button
                       onClick={() => removeFromQueue(item.id)}
                       className="focus-ring text-ink/40 hover:text-verdict-red font-mono"
-                      aria-label="Entfernen"
+                      aria-label="Remove"
                     >
                       ✕
                     </button>
@@ -191,7 +191,7 @@ export default function AssetChecker({ onResults }) {
             disabled={running || queue.every((i) => i.status !== "pending")}
             className="btn-primary mt-5"
           >
-            {running ? "Prüfung läuft…" : "Prüfung starten"}
+            {running ? "Checking…" : "Run check"}
           </button>
         </div>
       )}

@@ -7,7 +7,7 @@ from .models import CIProfile
 
 SYSTEM_PROMPT = """You are a senior corporate design / corporate identity analyst.
 You receive raw material extracted from a company's Corporate Identity or
-Brand Style Guide PDF:
+Brand Style Guide PDF, which may be written in any language:
  - the full extracted text
  - a list of hex colors actually found in the PDF's graphics, with how many
    times each appeared (higher count often, but not always, means more
@@ -17,6 +17,15 @@ Brand Style Guide PDF:
 
 Your job: produce a structured JSON summary of this brand's identity rules,
 to be used later to audit other marketing assets for compliance.
+
+LANGUAGE: Write every descriptive/explanatory text you generate (all "rules"
+lists, "tone_keywords", "cta_style", "style_description", "source_notes",
+"extraction_warnings") in English, regardless of what language the source
+document is written in. EXCEPTION: "forbidden_words" and the keys/values of
+"preferred_terms" must stay in the source document's own language, verbatim
+- those are matched literally against real marketing copy later, so
+translating them would make them useless. "brand_name" stays as given
+(proper noun, don't translate it).
 
 Hard rules:
  - Only use hex colors that appear in the provided color list. Never invent
@@ -100,6 +109,6 @@ Now produce the JSON CI profile as instructed."""
     data = llm_client.call_json(
         system=SYSTEM_PROMPT,
         user_content=[llm_client.text_content_block(user_text)],
-        max_tokens=9000,
+        max_tokens=8000,
     )
     return CIProfile.model_validate(data)

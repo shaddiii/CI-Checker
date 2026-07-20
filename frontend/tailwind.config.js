@@ -4,12 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: "#F6F5F1",
-        ink: "#171A21",
-        rule: "#DBD7CC",
+        paper: "#FAFAF9",
+        ink: "#15161A",
+        rule: "#E2E0DC",
+        // Estimated port-neo accent ("Data meets Empathy") - swap for the
+        // real brand hex once you have it, this is the only place it lives.
         indigo: {
-          DEFAULT: "#2B3A67",
-          dark: "#1C2749",
+          DEFAULT: "#C2185B",
+          dark: "#9A1148",
         },
         verdict: {
           green: "#1E7F4C",
@@ -21,8 +23,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ["Fraunces", "serif"],
-        body: ["'IBM Plex Sans'", "sans-serif"],
+        display: ["'Space Grotesk'", "sans-serif"],
+        body: ["Inter", "sans-serif"],
         mono: ["'IBM Plex Mono'", "monospace"],
       },
       borderRadius: {

@@ -2,13 +2,13 @@ import { useState } from "react";
 import VerdictStamp from "./VerdictStamp.jsx";
 
 const CATEGORY_LABELS = {
-  color: "Farbe",
-  typography: "Typografie",
+  color: "Color",
+  typography: "Typography",
   logo: "Logo",
-  imagery: "Bildsprache",
+  imagery: "Imagery",
   cta: "CTA / Button",
   layout: "Layout",
-  voice: "Tonalität",
+  voice: "Tone of voice",
 };
 
 function IssueRow({ issue }) {
@@ -30,14 +30,14 @@ function IssueRow({ issue }) {
               : "bg-verdict-amberBg text-verdict-amber"
           }`}
         >
-          {critical ? "kritisch" : "gering"}
+          {critical ? "critical" : "minor"}
         </span>
       </div>
       <p className="text-sm text-ink/85">{issue.message}</p>
       {(issue.expected || issue.found) && (
         <div className="mt-1 text-xs font-mono text-ink/50 flex flex-wrap gap-x-4">
-          {issue.expected && <span>Soll: {issue.expected}</span>}
-          {issue.found && <span>Ist: {issue.found}</span>}
+          {issue.expected && <span>Expected: {issue.expected}</span>}
+          {issue.found && <span>Found: {issue.found}</span>}
         </div>
       )}
     </div>
@@ -63,7 +63,7 @@ export default function ResultCard({ result }) {
               onClick={() => setOpen((o) => !o)}
               className="focus-ring font-mono text-xs text-indigo hover:underline shrink-0"
             >
-              {open ? "Details ausblenden" : `${result.issues.length} Punkt(e) anzeigen`}
+              {open ? "Hide details" : `Show ${result.issues.length} issue(s)`}
             </button>
           )}
         </div>

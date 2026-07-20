@@ -9,12 +9,12 @@ export default function ColorEditor({ colors, onChange }) {
     onChange(colors.filter((_, idx) => idx !== i));
   }
   function add() {
-    onChange([...colors, { name: "Neue Farbe", hex: "#000000", role: "secondary" }]);
+    onChange([...colors, { name: "New color", hex: "#000000", role: "secondary" }]);
   }
 
   return (
     <div>
-      <label className="field-label">Farbpalette</label>
+      <label className="field-label">Color palette</label>
       <div className="flex flex-col gap-2">
         {colors.map((c, i) => (
           <div key={i} className="flex items-center gap-2 bg-white border border-rule px-3 py-2 rounded-sm">
@@ -26,7 +26,7 @@ export default function ColorEditor({ colors, onChange }) {
               className="input flex-1"
               value={c.name}
               onChange={(e) => update(i, { name: e.target.value })}
-              placeholder="Name (z. B. Markenblau)"
+              placeholder="Name (e.g. Brand Blue)"
             />
             <input
               className="input w-28 font-mono uppercase"
@@ -49,7 +49,7 @@ export default function ColorEditor({ colors, onChange }) {
               type="button"
               onClick={() => remove(i)}
               className="focus-ring text-ink/40 hover:text-verdict-red px-1 font-mono text-sm"
-              aria-label="Farbe entfernen"
+              aria-label="Remove color"
             >
               ✕
             </button>
@@ -60,7 +60,7 @@ export default function ColorEditor({ colors, onChange }) {
           onClick={add}
           className="focus-ring self-start text-xs font-mono text-indigo hover:underline mt-1"
         >
-          + Farbe hinzufügen
+          + Add color
         </button>
       </div>
     </div>

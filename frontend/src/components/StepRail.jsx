@@ -1,8 +1,8 @@
 const STEPS = [
-  { n: 1, label: "Style Guide", hint: "PDF hochladen" },
-  { n: 2, label: "CI-Profil", hint: "prüfen & anpassen" },
-  { n: 3, label: "Assets", hint: "Bilder, Text, URLs" },
-  { n: 4, label: "Befund", hint: "Ampel & Details" },
+  { n: 1, label: "Style Guide", hint: "upload PDF" },
+  { n: 2, label: "CI Profile", hint: "review & edit" },
+  { n: 3, label: "Assets", hint: "images, text, URLs" },
+  { n: 4, label: "Verdict", hint: "results & details" },
 ];
 
 export default function StepRail({ current, onJump, canJump }) {

@@ -1,7 +1,7 @@
 const VARIANTS = {
-  green: { label: "Perfekt", sub: "CI konform", color: "#1E7F4C", glyph: "✓" },
-  yellow: { label: "Einige Issues", sub: "kleinere Abweichungen", color: "#B5720A", glyph: "!" },
-  red: { label: "Abweichung", sub: "CI-Verstoß", color: "#B23A2E", glyph: "✕" },
+  green: { label: "Perfect", sub: "CI compliant", color: "#1E7F4C", glyph: "✓" },
+  yellow: { label: "Some Issues", sub: "minor deviations", color: "#B5720A", glyph: "!" },
+  red: { label: "Deviation", sub: "CI violation", color: "#B23A2E", glyph: "✕" },
 };
 
 export default function VerdictStamp({ verdict, size = "md" }) {

@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import asset_analysis, ci_profile_builder, config, pdf_extraction, storage
+from . import asset_analysis, ci_profile_builder, config, jobs, pdf_extraction, storage
 from .models import AnalysisResult, CIProfile
 
 app = FastAPI(title="CI Compliance Checker")
@@ -36,35 +36,35 @@ def health():
     return {"status": "ok", "has_api_key": bool(config.ANTHROPIC_API_KEY)}
 
 
-@app.post("/api/styleguide", response_model=CIProfile)
+@app.post("/api/styleguide")
 async def upload_styleguide(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(400, "Please upload a PDF file.")
     data = await _read_capped(file)
 
-    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-        tmp.write(data)
-        tmp_path = tmp.name
+    job_id = jobs.create_job()
 
-    try:
-        extraction = pdf_extraction.extract_pdf_content(tmp_path)
-    finally:
-        Path(tmp_path).unlink(missing_ok=True)
+    def task():
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+            tmp.write(data)
+            tmp_path = tmp.name
+        try:
+            extraction = pdf_extraction.extract_pdf_content(tmp_path)
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
 
-    if not extraction["text"] and not extraction["colors_with_counts"]:
-        raise HTTPException(
-            422,
-            "No text or graphics could be extracted from this PDF. If it is a "
-            "scanned/image-only document, this tool cannot read it yet.",
-        )
+        if not extraction["text"] and not extraction["colors_with_counts"]:
+            raise RuntimeError(
+                "No text or graphics could be extracted from this PDF. If it is a "
+                "scanned/image-only document, this tool cannot read it yet."
+            )
 
-    try:
         profile = ci_profile_builder.build_profile_from_extraction(extraction)
-    except Exception as e:
-        raise HTTPException(502, f"Could not build CI profile: {e}")
+        storage.save_profile(profile)
+        return profile.model_dump()
 
-    storage.save_profile(profile)
-    return profile
+    jobs.run_in_background(job_id, task)
+    return {"job_id": job_id}
 
 
 @app.get("/api/profile", response_model=CIProfile)
@@ -88,16 +88,24 @@ def _require_profile() -> CIProfile:
     return profile
 
 
-@app.post("/api/analyze/image", response_model=AnalysisResult)
+@app.post("/api/analyze/image")
 async def analyze_image(file: UploadFile = File(...)):
     profile = _require_profile()
     data = await _read_capped(file)
     media_type = file.content_type or "image/png"
     if not media_type.startswith("image/"):
         raise HTTPException(400, "Please upload an image file.")
-    result = asset_analysis.analyze_image_bytes(data, media_type, profile, file.filename or "image")
-    storage.save_result(result)
-    return result
+    asset_name = file.filename or "image"
+
+    job_id = jobs.create_job()
+
+    def task():
+        result = asset_analysis.analyze_image_bytes(data, media_type, profile, asset_name)
+        storage.save_result(result)
+        return result.model_dump()
+
+    jobs.run_in_background(job_id, task)
+    return {"job_id": job_id}
 
 
 class TextPayload(BaseModel):
@@ -105,28 +113,50 @@ class TextPayload(BaseModel):
     asset_name: str = "text asset"
 
 
-@app.post("/api/analyze/text", response_model=AnalysisResult)
+@app.post("/api/analyze/text")
 def analyze_text(payload: TextPayload):
     profile = _require_profile()
     if not payload.text.strip():
         raise HTTPException(400, "Text must not be empty.")
-    result = asset_analysis.analyze_text(payload.text, profile, payload.asset_name)
-    storage.save_result(result)
-    return result
+
+    job_id = jobs.create_job()
+
+    def task():
+        result = asset_analysis.analyze_text(payload.text, profile, payload.asset_name)
+        storage.save_result(result)
+        return result.model_dump()
+
+    jobs.run_in_background(job_id, task)
+    return {"job_id": job_id}
 
 
 class UrlPayload(BaseModel):
     url: str
 
 
-@app.post("/api/analyze/url", response_model=AnalysisResult)
+@app.post("/api/analyze/url")
 def analyze_url(payload: UrlPayload):
     profile = _require_profile()
     if not payload.url.startswith(("http://", "https://")):
         raise HTTPException(400, "Please provide a full URL including http(s)://")
-    result = asset_analysis.analyze_url(payload.url, profile)
-    storage.save_result(result)
-    return result
+
+    job_id = jobs.create_job()
+
+    def task():
+        result = asset_analysis.analyze_url(payload.url, profile)
+        storage.save_result(result)
+        return result.model_dump()
+
+    jobs.run_in_background(job_id, task)
+    return {"job_id": job_id}
+
+
+@app.get("/api/jobs/{job_id}")
+def job_status(job_id: str):
+    job = jobs.get_job(job_id)
+    if job is None:
+        raise HTTPException(404, "Unknown job id.")
+    return job
 
 
 @app.get("/api/history", response_model=list[AnalysisResult])

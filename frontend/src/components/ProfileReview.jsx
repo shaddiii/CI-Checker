@@ -35,7 +35,7 @@ export default function ProfileReview({ profile, onContinue }) {
       const saved = await saveProfile(p);
       onContinue(saved);
     } catch (e) {
-      setError(e.message || "Speichern fehlgeschlagen.");
+      setError(e.message || "Failed to save.");
     } finally {
       setSaving(false);
     }
@@ -43,16 +43,16 @@ export default function ProfileReview({ profile, onContinue }) {
 
   return (
     <div className="max-w-3xl pb-24">
-      <p className="eyebrow">Schritt 2</p>
-      <h1 className="font-display text-3xl md:text-4xl text-ink mb-2">CI-Profil prüfen</h1>
+      <p className="eyebrow">Step 2</p>
+      <h1 className="font-display text-3xl md:text-4xl text-ink mb-2">Review your CI profile</h1>
       <p className="text-ink/70 mb-6 leading-relaxed">
-        Automatisch aus dem PDF extrahiert. Bitte kurz gegenprüfen und
-        korrigieren — das Profil ist die Referenz für alle folgenden Checks.
+        Automatically extracted from the PDF. Please double-check and correct
+        as needed — this profile is the reference for every check that follows.
       </p>
 
       {p.extraction_warnings?.length > 0 && (
         <div className="mb-6 border border-verdict-amber/40 bg-verdict-amberBg text-verdict-amber px-4 py-3 rounded-sm text-sm">
-          <p className="font-mono text-xs uppercase tracking-wide mb-1">Hinweise zur Extraktion</p>
+          <p className="font-mono text-xs uppercase tracking-wide mb-1">Extraction notes</p>
           <ul className="list-disc list-inside space-y-0.5">
             {p.extraction_warnings.map((w, i) => (
               <li key={i}>{w}</li>
@@ -62,9 +62,9 @@ export default function ProfileReview({ profile, onContinue }) {
       )}
 
       <div className="flex flex-col gap-5">
-        <Section title="Marke">
+        <Section title="Brand">
           <div>
-            <label className="field-label">Markenname</label>
+            <label className="field-label">Brand name</label>
             <input
               className="input w-full"
               value={p.brand_name || ""}
@@ -73,14 +73,14 @@ export default function ProfileReview({ profile, onContinue }) {
           </div>
         </Section>
 
-        <Section title="Farben">
+        <Section title="Colors">
           <ColorEditor colors={p.colors} onChange={(v) => set("colors", v)} />
         </Section>
 
-        <Section title="Typografie">
+        <Section title="Typography">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="field-label">Primäre Schrift</label>
+              <label className="field-label">Primary typeface</label>
               <input
                 className="input w-full"
                 value={p.typography.primary_typeface || ""}
@@ -88,7 +88,7 @@ export default function ProfileReview({ profile, onContinue }) {
               />
             </div>
             <div>
-              <label className="field-label">Sekundäre Schrift</label>
+              <label className="field-label">Secondary typeface</label>
               <input
                 className="input w-full"
                 value={p.typography.secondary_typeface || ""}
@@ -97,29 +97,29 @@ export default function ProfileReview({ profile, onContinue }) {
             </div>
           </div>
           <EditableList
-            label="Ersatzschriften"
+            label="Fallback typefaces"
             items={p.typography.fallback_typefaces}
             onChange={(v) => set("typography.fallback_typefaces", v)}
-            placeholder="z. B. Arial"
+            placeholder="e.g. Arial"
           />
           <EditableList
-            label="Erlaubte Schriftschnitte"
+            label="Allowed weights"
             items={p.typography.allowed_weights}
             onChange={(v) => set("typography.allowed_weights", v)}
-            placeholder="z. B. Regular, Bold"
+            placeholder="e.g. Regular, Bold"
           />
           <EditableList
-            label="Weitere Regeln"
+            label="Other rules"
             items={p.typography.rules}
             onChange={(v) => set("typography.rules", v)}
-            placeholder="z. B. Headlines nur in Bold"
+            placeholder="e.g. Headlines are always Bold"
           />
         </Section>
 
         <Section title="Logo">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="field-label">Mindestschutzraum</label>
+              <label className="field-label">Minimum clear space</label>
               <input
                 className="input w-full"
                 value={p.logo.min_clear_space || ""}
@@ -127,7 +127,7 @@ export default function ProfileReview({ profile, onContinue }) {
               />
             </div>
             <div>
-              <label className="field-label">Mindestgröße</label>
+              <label className="field-label">Minimum size</label>
               <input
                 className="input w-full"
                 value={p.logo.min_size || ""}
@@ -136,7 +136,7 @@ export default function ProfileReview({ profile, onContinue }) {
             </div>
           </div>
           <EditableList
-            label="Erlaubte Varianten"
+            label="Allowed variants"
             items={p.logo.variants_allowed}
             onChange={(v) => set("logo.variants_allowed", v)}
           />
@@ -144,41 +144,41 @@ export default function ProfileReview({ profile, onContinue }) {
             label="Don'ts"
             items={p.logo.donts}
             onChange={(v) => set("logo.donts", v)}
-            placeholder="z. B. nicht verzerren"
+            placeholder="e.g. never stretch or distort"
           />
         </Section>
 
-        <Section title="Tonalität &amp; CTA">
+        <Section title="Tone of voice &amp; CTA">
           <EditableList
-            label="Tonalitäts-Schlagworte"
+            label="Tone keywords"
             items={p.voice.tone_keywords}
             onChange={(v) => set("voice.tone_keywords", v)}
-            placeholder="z. B. selbstbewusst, nahbar"
+            placeholder="e.g. confident, approachable"
           />
           <EditableList
-            label="Verbotene Begriffe"
+            label="Forbidden words"
             items={p.voice.forbidden_words}
             onChange={(v) => set("voice.forbidden_words", v)}
           />
           <div>
-            <label className="field-label">CTA-Stil</label>
+            <label className="field-label">CTA style</label>
             <input
               className="input w-full"
               value={p.voice.cta_style || ""}
               onChange={(e) => set("voice.cta_style", e.target.value)}
-              placeholder="z. B. Imperativ, max. 3 Wörter"
+              placeholder="e.g. imperative, max 3 words"
             />
           </div>
           <EditableList
-            label="Weitere Regeln"
+            label="Other rules"
             items={p.voice.rules}
             onChange={(v) => set("voice.rules", v)}
           />
         </Section>
 
-        <Section title="Bildsprache">
+        <Section title="Imagery">
           <div>
-            <label className="field-label">Beschreibung</label>
+            <label className="field-label">Description</label>
             <textarea
               className="input w-full min-h-[80px]"
               value={p.imagery.style_description || ""}
@@ -186,7 +186,7 @@ export default function ProfileReview({ profile, onContinue }) {
             />
           </div>
           <EditableList
-            label="Regeln"
+            label="Rules"
             items={p.imagery.rules}
             onChange={(v) => set("imagery.rules", v)}
           />
@@ -201,7 +201,7 @@ export default function ProfileReview({ profile, onContinue }) {
 
       <div className="sticky bottom-0 mt-8 -mx-6 px-6 py-4 bg-paper/95 backdrop-blur border-t border-rule flex justify-end">
         <button onClick={handleContinue} disabled={saving} className="btn-primary">
-          {saving ? "Speichern…" : "Profil speichern & weiter"}
+          {saving ? "Saving…" : "Save profile & continue"}
         </button>
       </div>
     </div>

@@ -53,7 +53,7 @@ export default function App() {
 
         <main>
           {checking ? (
-            <p className="font-mono text-sm text-ink/50">Lade…</p>
+            <p className="font-mono text-sm text-ink/50">Loading…</p>
           ) : (
             <>
               {step === 1 && (

@@ -11,7 +11,7 @@ export default function UploadStyleGuide({ onProfileReady }) {
   async function handleFile(file) {
     if (!file) return;
     if (!file.name.toLowerCase().endsWith(".pdf")) {
-      setError("Bitte eine PDF-Datei hochladen.");
+      setError("Please upload a PDF file.");
       return;
     }
     setFileName(file.name);
@@ -21,7 +21,7 @@ export default function UploadStyleGuide({ onProfileReady }) {
       const profile = await uploadStyleGuide(file);
       onProfileReady(profile);
     } catch (e) {
-      setError(e.message || "Extraktion fehlgeschlagen.");
+      setError(e.message || "Extraction failed.");
     } finally {
       setLoading(false);
     }
@@ -29,14 +29,14 @@ export default function UploadStyleGuide({ onProfileReady }) {
 
   return (
     <div className="max-w-2xl">
-      <p className="eyebrow">Schritt 1</p>
+      <p className="eyebrow">Step 1</p>
       <h1 className="font-display text-3xl md:text-4xl text-ink mb-3">
-        Corporate-Identity-Guide hochladen
+        Upload your Corporate Identity guide
       </h1>
       <p className="text-ink/70 mb-8 leading-relaxed">
-        Lade das offizielle CI/CD-Styleguide-PDF hoch. Farben, Schriften und
-        Regeln (Logo, Tonalität, Bildsprache) werden daraus automatisch
-        extrahiert und im nächsten Schritt zur Kontrolle vorgelegt.
+        Upload the official CI/CD style guide PDF (any language is fine).
+        Colors, typefaces, and rules (logo, tone of voice, imagery) will be
+        extracted automatically and shown to you for review in the next step.
       </p>
 
       <div
@@ -66,13 +66,13 @@ export default function UploadStyleGuide({ onProfileReady }) {
           <div className="flex flex-col items-center gap-3">
             <div className="w-8 h-8 border-2 border-ink/20 border-t-indigo rounded-full animate-spin" />
             <p className="font-mono text-sm text-ink/70">
-              {fileName} wird analysiert — Farben, Schriften &amp; Regeln werden extrahiert…
+              Analyzing {fileName} — extracting colors, fonts &amp; rules. This can take a minute or two.
             </p>
           </div>
         ) : (
           <>
-            <p className="font-display text-lg text-ink mb-1">PDF hierher ziehen</p>
-            <p className="text-ink/50 text-sm">oder klicken, um eine Datei auszuwählen</p>
+            <p className="font-display text-lg text-ink mb-1">Drop your PDF here</p>
+            <p className="text-ink/50 text-sm">or click to choose a file</p>
           </>
         )}
       </div>

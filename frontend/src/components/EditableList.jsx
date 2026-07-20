@@ -27,7 +27,7 @@ export default function EditableList({ label, items, onChange, placeholder }) {
               type="button"
               onClick={() => remove(i)}
               className="focus-ring text-ink/40 hover:text-verdict-red px-2 font-mono text-sm"
-              aria-label="Eintrag entfernen"
+              aria-label="Remove entry"
             >
               ✕
             </button>
@@ -38,7 +38,7 @@ export default function EditableList({ label, items, onChange, placeholder }) {
           onClick={add}
           className="focus-ring self-start text-xs font-mono text-indigo hover:underline mt-1"
         >
-          + Eintrag hinzufügen
+          + Add entry
         </button>
       </div>
     </div>

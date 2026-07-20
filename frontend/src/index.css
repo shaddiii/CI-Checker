@@ -7,17 +7,17 @@ html, body, #root {
 }
 
 body {
-  background-color: #F6F5F1;
+  background-color: #FAFAF9;
   background-image:
-    linear-gradient(rgba(23,26,33,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23,26,33,0.035) 1px, transparent 1px);
+    linear-gradient(rgba(21,22,26,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(21,22,26,0.03) 1px, transparent 1px);
   background-size: 28px 28px;
-  color: #171A21;
+  color: #15161A;
 }
 
 ::selection {
-  background: #2B3A67;
-  color: #F6F5F1;
+  background: #C2185B;
+  color: #FAFAF9;
 }
 
 /* Signature element: an inspection stamp used for the verdict.
@@ -60,7 +60,7 @@ body {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid #2B3A67;
+  outline: 2px solid #C2185B;
   outline-offset: 2px;
 }
 
